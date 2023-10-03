@@ -1,45 +1,44 @@
 #include <iostream>
-#include <queue>
+#include <string>
+#include <vector>
 using namespace std;
 
 inline int min(int a, int b) { return a <= b ? a : b; }
 
 int main() {
-    int n, k, ans = 1, p[1000001 * 2] = {0};
-    priority_queue<int> len;
-    string s, str = "~|";
-    cin >> n >> k >> s;
-    for (const auto &s_key : s) {
-        str.push_back(s_key);
-        str.push_back('|');
+    string n, s = "~|";
+    // s[i] 的回文半径
+    vector<int> p(11000002 * 2, 0);
+    int ans;
+    cin >> n;
+    // aba -> ~|a|b|a|
+    for (const auto &n_key : n) {
+        s.push_back(n_key);
+        s.push_back('|');
     }
-    for (int i = 1, r = 0, mid = 0; i < str.size(); i++) {
+    // r 表示我们经过的，最靠右边的点
+    // mid 表示这个最靠右的点是由哪一个对称轴转移过来的
+    for (int i = 1, r = 0, mid = 0; i < s.size(); i++) {
+        // 如果 i 在右边界内
         if (i <= r)
+            // i 关于 mid 的对称点为 mid * 2 - i
+            // 能确定的范围右侧不大于
+            // r，即 p[i] + i - 1 <= r => p[i] <= r - i + 1
             p[i] = min(p[mid * 2 - i], r - i + 1);
-        while (str[i + p[i]] == str[i - p[i]])
+        // 暴力向两边拓展
+        // s[0] == '~' 故不会越界
+        while (s[i - p[i]] == s[i + p[i]])
             p[i]++;
-        if (i + p[i] > r) {
-            r = i + p[i] - 1;
+        if (p[i] + i > r) {
+            r = p[i] + i - 1;
             mid = i;
         }
-        if ((p[i] - 1) % 2 == 1) {
-            len.push(p[i] - 1);
-        }
+        if (p[i] > ans)
+            ans = p[i];
     }
-    // while (!len.empty()) {
-    //     cout << len.top() << " ";
-    //     len.pop();
-    // }
-    // cout << endl;
-    if (len.size() < k) {
-        cout << -1 << endl;
-    } else {
-        for (int i = 0; i < k; i++) {
-            ans *= len.top();
-            len.pop();
-        }
-        cout << ans << endl;
-    }
+
+    // n[i] 的回文长度 == s[i] 的回文半径 + 1
+    cout << ans - 1 << endl;
 
     return 0;
 }
