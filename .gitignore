@@ -31,3 +31,7 @@
 *.out
 *.app
 build/
+
+#input ans output
+*in
+*out
