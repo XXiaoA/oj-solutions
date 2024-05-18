@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iostream>
 using namespace std;
 
@@ -12,13 +13,15 @@ int read() {
 
 int main() {
     ios::sync_with_stdio(false);
-    int n;
+    int n, ans = 0, count = 0;
     n = read();
-    if (n > 2 && (n - 2) % 2 == 0) {
-        cout << "YES" << endl;
-    } else {
-        cout << "NO" << endl;
+    while (n) {
+        count++;
+        if (n % 3 == 1 && ans == 0)
+            ans = count;
+        n -= ceil(n / 3.0);
     }
+    cout << count << " " << ans;
 
     return 0;
 }
