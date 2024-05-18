@@ -32,6 +32,7 @@
 *.app
 build/
 
-#input ans output
+#input, output, test
 *in
 *out
+*.testcases
